@@ -34,12 +34,14 @@ public class TaskService {
 
     public Task update(Long id, Task obj) {
         Task entity = taskRepository.getReferenceById(id);
-        updateData(entity, obj);
+        updateTaskDetails(entity, obj);
         return taskRepository.save(entity);
     }
 
-    private void updateData(Task entity, Task obj) {
+    private void updateTaskDetails(Task entity, Task obj) {
         entity.setName(obj.getName());
+        entity.setDescription(obj.getDescription());
+        entity.setPriority(obj.isPriority());
+        entity.setPriorityLevel(obj.getPriorityLevel());
     }
-
 }

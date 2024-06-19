@@ -1,5 +1,7 @@
 package com.almeida.to_do_list.model;
 
+import com.almeida.to_do_list.common.enuns.PriorityLevelEnum;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +20,7 @@ public class Task {
 
     boolean priority;
 
-    public enum Priority {
-        LOW, MEDIUM, HIGH
-    }
+    public PriorityLevelEnum priorityLevel;
 
     public Task() {
     }
@@ -55,5 +55,13 @@ public class Task {
 
     public void setPriority(boolean priority) {
         this.priority = priority;
+    }
+
+    public PriorityLevelEnum getPriorityLevel() {
+        return priorityLevel;
+    }
+
+    public void setPriorityLevel(PriorityLevelEnum priorityLevel) {
+        this.priorityLevel = priorityLevel;
     }
 }
