@@ -2,10 +2,12 @@ package com.almeida.to_do_list.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.almeida.to_do_list.dto.TaskDto;
 import com.almeida.to_do_list.model.Task;
 import com.almeida.to_do_list.repository.TaskRepository;
 
@@ -15,8 +17,11 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public List<Task> findAll() {
-        return taskRepository.findAll();
+    public List<TaskDto> findAll() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream()
+                .map(task -> mapper.map(task, TaskDto.class))
+                .collect(Collectors.toList());
     }
 
     public Task findById(Long id) {

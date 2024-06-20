@@ -2,7 +2,7 @@ package com.almeida.to_do_list.dto;
 
 import com.almeida.to_do_list.common.enuns.PriorityLevelEnum;
 
-public class DtoTask {
+public class TaskDto {
 
     String name;
 
