@@ -4,13 +4,23 @@ import com.almeida.to_do_list.common.enuns.PriorityLevelEnum;
 
 public class TaskDto {
 
-    String name;
+    private Long id;
 
-    String description;
+    private String name;
 
-    boolean priority;
+    private String description;
+
+    private boolean priority;
 
     public PriorityLevelEnum priorityLevel;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

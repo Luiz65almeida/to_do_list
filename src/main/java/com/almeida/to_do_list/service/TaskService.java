@@ -29,12 +29,13 @@ public class TaskService {
     }
 
     public TaskDto findById(Long id) {
-        Optional<Task> optUsuario = taskRepository.findById(id);
-        return modelMapper.map(optUsuario.get(), TaskDto.class);
+        Optional<Task> optTask = taskRepository.findById(id);
+        return modelMapper.map(optTask.get(), TaskDto.class);
     }
 
-    public TaskDto insert(TaskDto taskDtodto) {
-        Task task = modelMapper.map(taskDtodto, Task.class);
+    public TaskDto insert(TaskDto taskDto) {
+        Task task = modelMapper.map(taskDto, Task.class);
+        task = taskRepository.save(task); // Salva a entidade no repositório
         return modelMapper.map(task, TaskDto.class);
     }
 

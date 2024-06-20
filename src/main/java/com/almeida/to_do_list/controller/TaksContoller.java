@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.almeida.to_do_list.model.Task;
+import com.almeida.to_do_list.dto.TaskDto;
 import com.almeida.to_do_list.service.TaskService;
 
 @RestController
@@ -23,38 +23,37 @@ import com.almeida.to_do_list.service.TaskService;
 public class TaksContoller {
 
     @Autowired
-    private TaskService taskservice;
+    private TaskService taskService;
 
     @GetMapping
-    public ResponseEntity<List<Task>> findAll() {
-        List<Task> list = taskservice.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<List<TaskDto>> findAll() {
+        List<TaskDto> dtoList = taskService.findAll();
+        return ResponseEntity.ok().body(dtoList);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Task> findById(@PathVariable Long id) {
-        Task obj = taskservice.findById(id);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<TaskDto> findById(@PathVariable Long id) {
+        TaskDto dto = taskService.findById(id);
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping
-    public ResponseEntity<Task> insert(@RequestBody Task obj) {
-        obj = taskservice.insert(obj);
+    public ResponseEntity<TaskDto> insert(@RequestBody TaskDto taskDto) {
+        TaskDto dto = taskService.insert(taskDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        taskservice.delete(id);
+        taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task obj) {
-        obj = taskservice.update(id, obj);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<TaskDto> update(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+        TaskDto dto = taskService.update(id, taskDto);
+        return ResponseEntity.ok().body(dto);
     }
-
 }
