@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,36 +18,41 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     public List<TaskDto> findAll() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream()
-                .map(task -> mapper.map(task, TaskDto.class))
+                .map(task -> modelMapper.map(task, TaskDto.class))
                 .collect(Collectors.toList());
     }
 
-    public Task findById(Long id) {
-        Optional<Task> obj = taskRepository.findById(id);
-        return obj.get();
+    public TaskDto findById(Long id) {
+        Optional<Task> optUsuario = taskRepository.findById(id);
+        return modelMapper.map(optUsuario.get(), TaskDto.class);
     }
 
-    public Task insert(Task task) {
-        return taskRepository.save(task);
+    public TaskDto insert(TaskDto taskDtodto) {
+        Task task = modelMapper.map(taskDtodto, Task.class);
+        return modelMapper.map(task, TaskDto.class);
     }
 
     public void delete(Long id) {
         taskRepository.deleteById(id);
     }
 
-    public Task update(Long id, Task obj) {
+    public TaskDto update(Long id, TaskDto taskDto) {
         Task entity = taskRepository.getReferenceById(id);
-        updateTaskDetails(entity, obj);
-        return taskRepository.save(entity);
+        updateTaskDetails(entity, taskDto);
+        Task updatedEntity = taskRepository.save(entity);
+        return modelMapper.map(updatedEntity, TaskDto.class);
     }
 
-    private void updateTaskDetails(Task entity, Task obj) {
-        entity.setName(obj.getName());
-        entity.setDescription(obj.getDescription());
-        entity.setPriority(obj.isPriority());
-        entity.setPriorityLevel(obj.getPriorityLevel());
+    private void updateTaskDetails(Task entity, TaskDto taskDto) {
+        entity.setName(taskDto.getName());
+        entity.setDescription(taskDto.getDescription());
+        entity.setPriority(taskDto.isPriority());
+        entity.setPriorityLevel(taskDto.getPriorityLevel());
     }
 }
