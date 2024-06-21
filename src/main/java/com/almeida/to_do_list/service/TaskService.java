@@ -71,6 +71,12 @@ public class TaskService {
     }
 
     public TaskDto update(Long id, TaskDto taskDto) {
+
+        Optional<Task> optionalTask = taskRepository.findById(id);
+        if (!optionalTask.isPresent()) {
+            throw new ResourceNotFoundException("Não foi possível encontrar a task com o id: " + id);
+        }
+
         Task entity = taskRepository.getReferenceById(id);
         updateTaskDetails(entity, taskDto);
         Task updatedEntity = taskRepository.save(entity);
