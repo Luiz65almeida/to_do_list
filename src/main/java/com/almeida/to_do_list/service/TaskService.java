@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.almeida.to_do_list.common.exeption.ResourceBadRequestException;
+import com.almeida.to_do_list.common.exeption.ResourceNotFoundException;
 import com.almeida.to_do_list.dto.TaskDto;
 import com.almeida.to_do_list.model.Task;
 import com.almeida.to_do_list.repository.TaskRepository;
@@ -33,6 +34,10 @@ public class TaskService {
 
     public TaskDto findById(Long id) {
         Optional<Task> optTask = taskRepository.findById(id);
+
+        if (optTask.isEmpty()) {
+            throw new ResourceBadRequestException("Não foi possível encontrar a task com o id: " + id);
+        }
         return modelMapper.map(optTask.get(), TaskDto.class);
     }
 
@@ -52,6 +57,13 @@ public class TaskService {
     }
 
     public void delete(Long id) {
+
+        Optional<Task> task = taskRepository.findById(id);
+
+        if (id == null || !task.isPresent()) {
+            throw new ResourceNotFoundException("Não foi possível encontar o usuário com o id: " + id);
+        }
+
         taskRepository.deleteById(id);
     }
 
