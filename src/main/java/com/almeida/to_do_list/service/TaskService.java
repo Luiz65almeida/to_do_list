@@ -8,6 +8,8 @@ import javax.management.RuntimeErrorException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.almeida.to_do_list.common.exeption.ResourceBadRequestException;
@@ -56,7 +58,7 @@ public class TaskService {
         return modelMapper.map(task, TaskDto.class);
     }
 
-    public void delete(Long id) {
+    public ResponseEntity<String> delete(Long id) {
 
         Optional<Task> task = taskRepository.findById(id);
 
@@ -65,6 +67,7 @@ public class TaskService {
         }
 
         taskRepository.deleteById(id);
+        return new ResponseEntity<>("Task deletada com sucesso", HttpStatus.OK);
     }
 
     public TaskDto update(Long id, TaskDto taskDto) {

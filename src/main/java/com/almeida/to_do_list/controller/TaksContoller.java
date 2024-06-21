@@ -45,10 +45,9 @@ public class TaksContoller {
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        taskService.delete(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return taskService.delete(id);
     }
 
     @PutMapping(value = "/{id}")
