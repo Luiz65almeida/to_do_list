@@ -16,13 +16,18 @@ import com.almeida.to_do_list.common.exeption.ResourceBadRequestException;
 import com.almeida.to_do_list.common.exeption.ResourceNotFoundException;
 import com.almeida.to_do_list.dto.TaskDto;
 import com.almeida.to_do_list.model.Task;
+import com.almeida.to_do_list.model.Users;
 import com.almeida.to_do_list.repository.TaskRepository;
+import com.almeida.to_do_list.repository.UserRepository;
 
 @Service
 public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -44,16 +49,13 @@ public class TaskService {
     }
 
     public TaskDto insert(TaskDto taskDto) {
-        validateName(taskDto);
-
-        Optional<Task> optTask = taskRepository.findByName(taskDto.getName());
-
-        if (optTask.isPresent()) {
-
-            throw new ResourceBadRequestException("Já existe uma Task cadastrado com esse nome: " + taskDto.getName());
+        Optional<Users> userOpt = userRepository.findById(taskDto.getUserId());
+        if (userOpt.isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id: " + taskDto.getUserId());
         }
 
         Task task = modelMapper.map(taskDto, Task.class);
+        task.setUser(userOpt.get());
         task = taskRepository.save(task);
         return modelMapper.map(task, TaskDto.class);
     }
