@@ -44,7 +44,7 @@ public class TaskService {
     }
 
     public TaskDto insert(TaskDto taskDto) {
-        validateUser(taskDto);
+        validateName(taskDto);
 
         Optional<Task> optTask = taskRepository.findByName(taskDto.getName());
 
@@ -90,7 +90,7 @@ public class TaskService {
         entity.setPriorityLevel(taskDto.getPriorityLevel());
     }
 
-    private void validateUser(TaskDto taskDto) {
+    private void validateName(TaskDto taskDto) {
 
         if (taskDto.getName() == null || taskDto.getPriorityLevel() == null) {
             throw new RuntimeErrorException(null, "Name e getPriorityLevel são obrigatórios");

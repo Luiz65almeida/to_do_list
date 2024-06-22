@@ -21,11 +21,13 @@ public class Users {
   private Long id;
 
   private String name;
+
   private String email;
+
   private String password;
 
   @Temporal(TemporalType.DATE)
-  private Date dataCadastro;
+  private Date dateRegister;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Task> tasks;
@@ -66,11 +68,11 @@ public class Users {
   }
 
   public Date getDataCadastro() {
-    return dataCadastro;
+    return dateRegister;
   }
 
   public void setDataCadastro(Date dataCadastro) {
-    this.dataCadastro = dataCadastro;
+    this.dateRegister = dataCadastro;
   }
 
   public List<Task> getTasks() {
