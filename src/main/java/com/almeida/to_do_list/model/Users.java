@@ -1,6 +1,6 @@
 package com.almeida.to_do_list.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -10,8 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 public class Users {
@@ -26,8 +24,7 @@ public class Users {
 
   private String password;
 
-  @Temporal(TemporalType.DATE)
-  private Date dateRegister;
+  private LocalDateTime dateRegister;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Task> tasks;
@@ -67,19 +64,19 @@ public class Users {
     this.password = password;
   }
 
-  public Date getDataCadastro() {
-    return dateRegister;
-  }
-
-  public void setDataCadastro(Date dataCadastro) {
-    this.dateRegister = dataCadastro;
-  }
-
   public List<Task> getTasks() {
     return tasks;
   }
 
   public void setTasks(List<Task> tasks) {
     this.tasks = tasks;
+  }
+
+  public LocalDateTime getDateRegister() {
+    return dateRegister;
+  }
+
+  public void setDateRegister(LocalDateTime dateRegister) {
+    this.dateRegister = dateRegister;
   }
 }

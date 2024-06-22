@@ -1,6 +1,6 @@
 package com.almeida.to_do_list.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class UserDto {
 
@@ -12,7 +12,7 @@ public class UserDto {
 
   private String password;
 
-  private Date dateRegister;
+  private LocalDateTime dateRegister;
 
   public Long getId() {
     return id;
@@ -46,12 +46,11 @@ public class UserDto {
     this.password = password;
   }
 
-  public Date getDateRegister() {
+  public LocalDateTime getDateRegister() {
     return dateRegister;
   }
 
-  public void setDateRegister(Date dateRegister) {
+  public void setDateRegister(LocalDateTime dateRegister) {
     this.dateRegister = dateRegister;
   }
-
 }

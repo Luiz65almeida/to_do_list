@@ -1,5 +1,6 @@
 package com.almeida.to_do_list.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,6 +72,8 @@ public class UserService {
     }
 
     Users user = modelMapper.map(userDto, Users.class);
+
+    user.setDateRegister(LocalDateTime.now());
     user = userRepository.save(user);
     return modelMapper.map(user, UserDto.class);
   }
@@ -100,9 +103,7 @@ public class UserService {
 
   private void updateUserDetails(Users entity, UserDto userDto) {
     entity.setName(userDto.getName());
-    entity.setEmail(userDto.getEmail());
     entity.setPassword(userDto.getPassword());
-    entity.setDataCadastro(userDto.getDateRegister());
   }
 
   private void validateName(UserDto userDto) {
