@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.almeida.to_do_list.dto.UserDto;
 import com.almeida.to_do_list.service.UserService;
 
+@RestController
+@RequestMapping(value = "/users")
 public class UserController {
 
   @Autowired
@@ -33,14 +37,14 @@ public class UserController {
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
-  @GetMapping("/email")
-  public ResponseEntity<UserDto> findByEmail(@RequestParam String email) {
+  @GetMapping("/email/{email}")
+  public ResponseEntity<UserDto> findByEmail(@PathVariable String email) {
     UserDto user = userService.findByEmail(email);
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
-  @GetMapping("/name")
-  public ResponseEntity<List<UserDto>> findByName(@RequestParam String name) {
+  @GetMapping("/name/{name}")
+  public ResponseEntity<List<UserDto>> findByName(@PathVariable String name) {
     List<UserDto> users = userService.findByName(name);
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
