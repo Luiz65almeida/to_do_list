@@ -3,39 +3,34 @@ package com.almeida.to_do_list.model;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
-public class User {
+public class Users {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String name;
-
   private String email;
-
   private String password;
 
+  @Temporal(TemporalType.DATE)
   private Date dataCadastro;
 
-  @OneToMany(mappedBy = "")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Task> tasks;
 
-  public User() {
-  }
-
-  public User(String name, String email, String password, Date dataCadastro, List<Task> tasks) {
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.dataCadastro = dataCadastro;
-    this.tasks = tasks;
+  public Users() {
   }
 
   public Long getId() {

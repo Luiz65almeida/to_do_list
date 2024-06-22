@@ -3,24 +3,31 @@ package com.almeida.to_do_list.model;
 import com.almeida.to_do_list.common.enuns.PriorityLevelEnum;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
+    private String name;
+    private String description;
+    private boolean priority;
 
-    String description;
+    @Enumerated(EnumType.STRING)
+    private PriorityLevelEnum priorityLevel;
 
-    boolean priority;
-
-    public PriorityLevelEnum priorityLevel;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
 
     public Task() {
     }
@@ -63,5 +70,13 @@ public class Task {
 
     public void setPriorityLevel(PriorityLevelEnum priorityLevel) {
         this.priorityLevel = priorityLevel;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 }
