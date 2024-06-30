@@ -49,6 +49,7 @@ public class TaskService {
     }
 
     public TaskDto insert(TaskDto taskDto) {
+        validateName(taskDto);
         Optional<Users> userOpt = userRepository.findById(taskDto.getUserId());
         if (userOpt.isEmpty()) {
             throw new ResourceNotFoundException("User not found with id: " + taskDto.getUserId());

@@ -52,7 +52,7 @@ public class UserService {
   }
 
   public List<UserDto> findByName(String name) {
-    List<Users> users = userRepository.findByName(name);
+    Optional<Users> users = userRepository.findByUsername(name);
 
     if (users.isEmpty()) {
       throw new ResourceNotFoundException("Não foi possível encontrar usuários com o nome: " + name);
@@ -102,7 +102,7 @@ public class UserService {
   }
 
   private void updateUserDetails(Users entity, UserDto userDto) {
-    entity.setName(userDto.getName());
+    entity.setUsername(userDto.getName());
     entity.setPassword(userDto.getPassword());
   }
 
