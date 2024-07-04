@@ -1,5 +1,6 @@
 package com.almeida.to_do_list.service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +94,7 @@ public class UserService {
     Users user = new Users(userDto.getUsername(), userDto.getEmail(),
         encoder.encode(userDto.getPassword()));
 
-    Set<String> strRoles = userDto.getRole();
+    Set<String> strRoles = userDto.getRoles();
     Set<Role> roles = new HashSet<>();
 
     if (strRoles == null) {
@@ -122,6 +123,7 @@ public class UserService {
     }
 
     user.setRoles(roles);
+    user.setDateRegister(LocalDateTime.now());
     userRepository.save(user);
 
     return new MessageResponse("User registered successfully!");
