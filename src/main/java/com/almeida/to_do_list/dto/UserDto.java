@@ -3,6 +3,8 @@ package com.almeida.to_do_list.dto;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,6 +27,7 @@ public class UserDto {
 
   private LocalDateTime dateRegister;
 
+  @JsonIgnore
   private Set<String> roles;
 
   public String getUsername() {
@@ -74,5 +77,4 @@ public class UserDto {
   public void setRoles(Set<String> roles) {
     this.roles = roles;
   }
-
 }
