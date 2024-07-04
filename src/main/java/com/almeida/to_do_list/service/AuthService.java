@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.almeida.to_do_list.payload.request.LoginRequest;
+import com.almeida.to_do_list.dto.UserDto;
 import com.almeida.to_do_list.payload.response.JwtResponse;
 import com.almeida.to_do_list.security.jwt.JwtUtils;
 import com.almeida.to_do_list.security.service.UserDetailsImpl;
@@ -24,9 +24,9 @@ public class AuthService {
     @Autowired
     JwtUtils jwtUtils;
 
-    public JwtResponse authenticateUser(LoginRequest loginRequest) {
+    public JwtResponse authenticateUser(UserDto userDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);

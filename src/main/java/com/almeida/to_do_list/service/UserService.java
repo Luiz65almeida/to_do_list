@@ -1,8 +1,9 @@
 package com.almeida.to_do_list.service;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -10,12 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.almeida.to_do_list.common.exeption.ResourceBadRequestException;
+import com.almeida.to_do_list.common.enuns.RoleEnum;
 import com.almeida.to_do_list.common.exeption.ResourceNotFoundException;
 import com.almeida.to_do_list.dto.UserDto;
+import com.almeida.to_do_list.model.Role;
 import com.almeida.to_do_list.model.Users;
+import com.almeida.to_do_list.payload.response.MessageResponse;
+import com.almeida.to_do_list.repository.RoleRepository;
 import com.almeida.to_do_list.repository.UserRepository;
 import com.almeida.to_do_list.security.jwt.JwtUtils;
 
@@ -30,6 +35,12 @@ public class UserService {
 
   @Autowired
   AuthenticationManager authenticationManager;
+
+  @Autowired
+  RoleRepository roleRepository;
+
+  @Autowired
+  PasswordEncoder encoder;
 
   @Autowired
   JwtUtils jwtUtils;
@@ -70,20 +81,50 @@ public class UserService {
         .collect(Collectors.toList());
   }
 
-  public UserDto insert(UserDto userDto) {
-    validateName(userDto);
-
-    Optional<Users> optUser = userRepository.findByEmail(userDto.getEmail());
-
-    if (optUser.isPresent()) {
-      throw new ResourceBadRequestException("Já existe um usuário cadastrado com esse email: " + userDto.getEmail());
+  public MessageResponse registerUser(UserDto userDto) {
+    if (userRepository.existsByUsername(userDto.getUsername())) {
+      return new MessageResponse("Error: Username is already taken!");
     }
 
-    Users user = modelMapper.map(userDto, Users.class);
+    if (userRepository.existsByEmail(userDto.getEmail())) {
+      return new MessageResponse("Error: Email is already in use!");
+    }
 
-    user.setDateRegister(LocalDateTime.now());
-    user = userRepository.save(user);
-    return modelMapper.map(user, UserDto.class);
+    Users user = new Users(userDto.getUsername(), userDto.getEmail(),
+        encoder.encode(userDto.getPassword()));
+
+    Set<String> strRoles = userDto.getRole();
+    Set<Role> roles = new HashSet<>();
+
+    if (strRoles == null) {
+      Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
+          .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+      roles.add(userRole);
+    } else {
+      strRoles.forEach(role -> {
+        switch (role) {
+          case "admin":
+            Role adminRole = roleRepository.findByName(RoleEnum.ROLE_ADMIN)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(adminRole);
+            break;
+          case "mod":
+            Role modRole = roleRepository.findByName(RoleEnum.ROLE_MODERATOR)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(modRole);
+            break;
+          default:
+            Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        }
+      });
+    }
+
+    user.setRoles(roles);
+    userRepository.save(user);
+
+    return new MessageResponse("User registered successfully!");
   }
 
   public UserDto update(Long id, UserDto userDto) {
@@ -110,13 +151,7 @@ public class UserService {
   }
 
   private void updateUserDetails(Users entity, UserDto userDto) {
-    entity.setUsername(userDto.getName());
+    entity.setUsername(userDto.getUsername());
     entity.setPassword(userDto.getPassword());
-  }
-
-  private void validateName(UserDto userDto) {
-    if (userDto.getName() == null || userDto.getEmail() == null) {
-      throw new RuntimeException("Name e email são obrigatórios");
-    }
   }
 }

@@ -1,18 +1,39 @@
 package com.almeida.to_do_list.dto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserDto {
 
   private Long id;
 
-  private String name;
+  @NotBlank
+  @Size(min = 3, max = 20)
+  private String username;
 
+  @Size(max = 50)
+  @Email
   private String email;
 
+  @NotBlank
+  @Size(min = 6, max = 40)
   private String password;
 
   private LocalDateTime dateRegister;
+
+  private Set<String> role;
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
   public Long getId() {
     return id;
@@ -20,14 +41,6 @@ public class UserDto {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public String getEmail() {
@@ -52,5 +65,13 @@ public class UserDto {
 
   public void setDateRegister(LocalDateTime dateRegister) {
     this.dateRegister = dateRegister;
+  }
+
+  public Set<String> getRole() {
+    return role;
+  }
+
+  public void setRole(Set<String> role) {
+    this.role = role;
   }
 }

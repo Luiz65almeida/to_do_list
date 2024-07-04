@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.almeida.to_do_list.dto.UserDto;
+import com.almeida.to_do_list.payload.response.MessageResponse;
 import com.almeida.to_do_list.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -48,10 +51,13 @@ public class UserController {
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<UserDto> insert(@RequestBody UserDto userDto) {
-    UserDto createdUser = userService.insert(userDto);
-    return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+  @PostMapping("/register")
+  public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto) {
+    MessageResponse response = userService.registerUser(userDto);
+    if (response.getMessage().startsWith("Error")) {
+      return ResponseEntity.badRequest().body(response);
+    }
+    return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{id}")
