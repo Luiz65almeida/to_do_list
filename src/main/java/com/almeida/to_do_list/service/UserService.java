@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 import com.almeida.to_do_list.common.exeption.ResourceBadRequestException;
@@ -16,6 +17,7 @@ import com.almeida.to_do_list.common.exeption.ResourceNotFoundException;
 import com.almeida.to_do_list.dto.UserDto;
 import com.almeida.to_do_list.model.Users;
 import com.almeida.to_do_list.repository.UserRepository;
+import com.almeida.to_do_list.security.jwt.JwtUtils;
 
 @Service
 public class UserService {
@@ -25,6 +27,12 @@ public class UserService {
 
   @Autowired
   private ModelMapper modelMapper;
+
+  @Autowired
+  AuthenticationManager authenticationManager;
+
+  @Autowired
+  JwtUtils jwtUtils;
 
   public List<UserDto> findAll() {
     List<Users> users = userRepository.findAll();

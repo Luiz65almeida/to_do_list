@@ -29,6 +29,8 @@ import com.almeida.to_do_list.repository.RoleRepository;
 import com.almeida.to_do_list.repository.UserRepository;
 import com.almeida.to_do_list.security.jwt.JwtUtils;
 import com.almeida.to_do_list.security.service.UserDetailsImpl;
+import com.almeida.to_do_list.service.AuthService;
+import com.almeida.to_do_list.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -52,25 +54,16 @@ public class AuthController {
   @Autowired
   JwtUtils jwtUtils;
 
+  @Autowired
+  AuthService authService;
+
+  @Autowired
+  UserService userService;
+
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String jwt = jwtUtils.generateJwtToken(authentication);
-
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    List<String> roles = userDetails.getAuthorities().stream()
-        .map(item -> item.getAuthority())
-        .collect(Collectors.toList());
-
-    return ResponseEntity.ok(new JwtResponse(jwt,
-        userDetails.getId(),
-        userDetails.getUsername(),
-        userDetails.getEmail(),
-        roles));
+    JwtResponse jwtResponse = authService.authenticateUser(loginRequest);
+    return ResponseEntity.ok(jwtResponse);
   }
 
   @PostMapping("/signup")
